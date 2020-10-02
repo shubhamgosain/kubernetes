@@ -15,20 +15,20 @@ Update hostname of master and worker nodes respectively :
 Give a static ip-address to make sure that node doesn't gets another ip on reboot. Give Address 192.168.200.10 to master and 192.168.200.11, 192.168.200.12 and so on to nodes :
 
     sudo echo 'network:
-  ethernets:
-    enp0s3:
-      addresses: [192.168.200.10/24]
-      gateway4: 192.168.200.1
-      nameservers:
-              addresses: [4.2.2.2, 8.8.8.8]
-      optional: true
-  version: 2' >  /etc/netplan/00-installer-config.yaml ;  sudo netplan apply
+    ethernets:
+      enp0s3:
+        addresses: [192.168.200.10/24]
+        gateway4: 192.168.200.1
+        nameservers:
+          addresses: [4.2.2.2, 8.8.8.8]
+        optional: true
+    version: 2' >  /etc/netplan/00-installer-config.yaml ;  sudo netplan apply
 
 Map host addresses to names :
 
     sudo echo '192.168.200.10 kmaster
-192.168.200.11 knode1
-192.168.200.12 knode2' >> /etc/hosts
+    192.168.200.11 knode1
+    192.168.200.12 knode2' >> /etc/hosts
 
 Install docker :
 
@@ -66,17 +66,14 @@ Setup Kubernetes Dashboard
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
     kubectl create serviceaccount dashboard -n defaul
     kubectl create clusterrolebinding dashboard-admin -n default \
-
---clusterrole=cluster-admin \
-
---serviceaccount=default:dashboard
+    --clusterrole=cluster-admin --serviceaccount=default:dashboard
     
 Get secret and run dashboard
    
     kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 –decode
     kubectl proxy  --address=192.168.200.10
 
-#Join the worker node
+# Join the worker node
 
 Use the command and token shared while cluster initialization
 
